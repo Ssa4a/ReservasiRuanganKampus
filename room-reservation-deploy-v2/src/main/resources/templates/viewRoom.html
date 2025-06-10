@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Room</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #343a40; /* Dark gray background */
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card h2 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: #333;
+        }
+
+        .feature-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 500px) {
+            .feature-card {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Daftar Ruangan</h1>
+</header>
+
+<div class="container">
+    <div class="feature-grid">
+
+        <div class="feature-card" onclick="location.href='client/room/kelas'">
+            <div class="icon">🏫</div>
+            <h2>Ruangan Kelas</h2>
+        </div>
+
+        <div class="feature-card" onclick="location.href='client/room/lab'">
+            <div class="icon">💻</div>
+            <h2>Lab Komputer</h2>
+        </div>
+
+        <div class="feature-card" onclick="location.href='client/room/aula'">
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+                    <!-- Layar Bioskop -->
+                    <rect x="8" y="18" width="48" height="24" fill="none" stroke="#000" stroke-width="2"/>
+
+                    <!-- Garis pemisah kursi dan layar -->
+                    <line x1="8" y1="42" x2="56" y2="42" stroke="#000" stroke-width="2"/>
+
+                    <!-- Kursi-kursi -->
+                    <rect x="10" y="44" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 1 -->
+                    <rect x="18" y="44" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 2 -->
+                    <rect x="26" y="44" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 3 -->
+                    <rect x="34" y="44" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 4 -->
+                    <rect x="42" y="44" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 5 -->
+                    <rect x="50" y="44" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 6 -->
+
+                    <!-- Kursi tambahan di baris bawah -->
+                    <rect x="10" y="50" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 7 -->
+                    <rect x="18" y="50" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 8 -->
+                    <rect x="26" y="50" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 9 -->
+                    <rect x="34" y="50" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 10 -->
+                    <rect x="42" y="50" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 11 -->
+                    <rect x="50" y="50" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/> <!-- Kursi 12 -->
+
+                    <!-- Kursi belakang (dengan kaki kursi yang lebih jelas) -->
+                    <rect x="10" y="56" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/>
+                    <rect x="18" y="56" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/>
+                    <rect x="26" y="56" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/>
+                    <rect x="34" y="56" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/>
+                    <rect x="42" y="56" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/>
+                    <rect x="50" y="56" width="4" height="4" fill="none" stroke="#000" stroke-width="2"/>
+                </svg>
+            </div>
+            <h2>Aula</h2>
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+</body>
+</html>

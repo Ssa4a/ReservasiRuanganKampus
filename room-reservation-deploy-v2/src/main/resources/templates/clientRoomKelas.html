@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Ruangan Kelas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            background-color: #343a40;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .room-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .status-box {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .booked {
+            background-color: #dc3545;
+        }
+
+        .available {
+            background-color: #28a745;
+        }
+
+        .room-info {
+            padding: 1rem;
+        }
+
+        .room-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #343a40;
+            margin-bottom: 0.5rem;
+        }
+
+        .room-type, .room-status {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        /* Modal Notifikasi */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            position: relative;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #aaa;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal-message {
+            font-size: 1rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Daftar Ruangan Kelas</h1>
+
+<div class="container">
+    <div class="room-grid">
+        <div class="room-card"
+             th:each="room : ${rooms}"
+             th:attr="data-status=${room.status.name()}, data-id=${room.id}"
+             onclick="handleRoomClick(this)">
+
+            <div class="status-box"
+                 th:classappend="${room.status.name() == 'BOOKED'} ? ' booked' : ' available'"
+                 th:text="${room.status}">
+                Status
+            </div>
+
+            <div class="room-info">
+                <div class="room-name" th:text="${room.name}">Nama Ruangan</div>
+                <div class="room-type" th:text="${room.type}">Tipe Ruangan</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Notifikasi -->
+<div class="modal" id="notificationModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <p class="modal-message">Ruangan telah terbooking. Silakan pilih ruangan lainnya.</p>
+    </div>
+</div>
+
+<script>
+    function handleRoomClick(card) {
+        const status = card.getAttribute('data-status');
+        const roomId = card.getAttribute('data-id');
+
+        if (status === 'BOOKED') {
+            showModal();
+        } else {
+            window.location.href = '/reserve/room?id=' + roomId;
+        }
+    }
+
+    function showModal() {
+        document.getElementById("notificationModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("notificationModal").style.display = "none";
+    }
+
+    // Optional: Tutup modal jika klik di luar modal-content
+    window.onclick = function(event) {
+        const modal = document.getElementById("notificationModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>

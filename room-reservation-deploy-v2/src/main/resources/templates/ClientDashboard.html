@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f8;
+        }
+
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 1rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card a {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .feature-card a:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 500px) {
+            .feature-card {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Client Dashboard</h1>
+</header>
+
+<div class="container">
+    <div class="feature-grid">
+
+        <!-- Lihat Ruangan -->
+        <div class="feature-card">
+            <div class="icon">🏫</div>
+            <h2>Lihat Ruangan</h2>
+            <a href="/viewRoom">Masuk</a>
+        </div>
+
+        <!-- Lihat Riwayat Booking -->
+        <div class="feature-card">
+            <div class="icon">📜</div>
+            <h2>Riwayat Booking</h2>
+            <a href="/booking-history">Masuk</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

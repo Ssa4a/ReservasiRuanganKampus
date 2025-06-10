@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Homepage</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      /* Gambar latar belakang kampus */
+      background-image: url('https://surabaya.telkomuniversity.ac.id/wp-content/uploads/2023/08/Telkom-University-National-Campus.jpg');
+      background-size: cover; /* Agar gambar memenuhi seluruh latar belakang */
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white; /* Warna teks putih agar kontras dengan gambar */
+    }
+
+    /* Lapisan hitam transparan di atas gambar */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Warna hitam dengan transparansi 50% */
+      z-index: -1; /* Menempatkan lapisan di belakang konten */
+    }
+
+    .homepage-box {
+      background-color: rgba(255, 255, 255, 0.8); /* Transparan sedikit untuk memberi efek background */
+      padding: 3rem;
+      border-radius: 16px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      animation: fadeIn 0.6s ease-in-out;
+      text-align: center;
+    }
+
+    h1 {
+      color: #343a40; /* Warna header lebih gelap agar senada dengan header halaman kelas */
+      margin-bottom: 1.5rem;
+      font-size: 2.5rem;
+    }
+
+    p {
+      color: #333;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-home {
+      padding: 1rem 2rem;
+      background-color: #6c757d; /* Abu-abu senada dengan halaman Daftar Ruangan Kelas */
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-home:hover {
+      background-color: #5a6368; /* Warna abu gelap saat hover */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="homepage-box">
+  <h1>Reservasi Kampus U</h1>
+  <p>Eksplore ruangan di kampus U dan lakukan peminjaman dengan mudah.</p>
+  <button class="btn-home" onclick="window.location.href='/login'">Pergi untuk login</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Gambar latar belakang yang lebih netral atau bisa diganti dengan gambar kampus */
+            background-image: url('https://surabaya.telkomuniversity.ac.id/wp-content/uploads/2023/08/Telkom-University-National-Campus.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Lapisan transparan di atas gambar */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Warna hitam transparan untuk menurunkan kontras gambar */
+            z-index: -1; /* Menempatkan lapisan di belakang konten */
+        }
+
+        .login-box {
+            background-color: rgba(255, 255, 255, 0.8); /* Transparansi sedikit untuk memberi efek background */
+            padding: 2.5rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 420px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            color: #343a40; /* Warna gelap yang senada dengan warna header ruangan kelas */
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.65rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: #28a745; /* Hijau senada dengan tombol */
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #6c757d; /* Warna abu-abu senada dengan halaman daftar ruang */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #5a6368; /* Warna abu gelap saat hover */
+        }
+
+        .error-message {
+            margin-top: 1rem;
+            color: #d32f2f;
+            background-color: #ffebee;
+            border-left: 4px solid #d32f2f;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="login-box">
+    <h1>Welcome Back</h1>
+    <form action="#" th:action="@{/login}" method="post">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required/>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required/>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <div th:if="${error != null}" class="error-message">
+        <p th:text="${error}"></p>
+    </div>
+</div>
+</body>
+</html>

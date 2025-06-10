@@ -1,0 +1,15 @@
+<h2>Booking yang Tersedia</h2>
+<ul>
+    <li th:each="booking : ${availableBookings}">
+        <p th:text="${booking.room}">Room</p>
+        <p th:text="${booking.bookingDate}">Date</p>
+        <form th:action="@{/admin/approveBooking}" method="post">
+            <input type="hidden" name="bookingId" th:value="${booking.id}" />
+            <button type="submit">Approve</button>
+        </form>
+        <form th:action="@{/admin/rejectBooking}" method="post">
+            <input type="hidden" name="bookingId" th:value="${booking.id}" />
+            <button type="submit">Reject</button>
+        </form>
+    </li>
+</ul>

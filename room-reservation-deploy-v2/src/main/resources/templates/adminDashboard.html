@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f8;
+        }
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .card h3 {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .button {
+            padding: 8px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .button-danger {
+            background-color: #dc3545;
+        }
+        .button-danger:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Admin Dashboard</h1>
+</header>
+
+<div class="container">
+
+    <!-- Daftar Ruangan -->
+    <div class="card">
+        <h3>Daftar Ruangan</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Ruangan</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Ruang Kelas</td>
+                <td><a href="/admin/rooms/kelas" class="button">Lihat Ruang Kelas</a></td>
+            </tr>
+            <tr>
+                <td>Ruang Lab</td>
+                <td><a href="/admin/rooms/lab" class="button">Lihat Ruang Lab</a></td>
+            </tr>
+            <tr>
+                <td>Aula</td>
+                <td><a href="/admin/rooms/aula" class="button">Lihat Ruang Aula</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pending Bookings -->
+    <div class="card">
+        <h3>Pending Bookings</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>User</th>
+                <th>Room</th>
+                <th>Booking Date</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="booking : ${pendingBookings}">
+                <td th:text="${booking.id}">ID</td>
+                <td th:text="${booking.user != null ? booking.user.username : 'N/A'}">User</td>
+                <td th:text="${booking.room != null ? booking.room.name : 'N/A'}">Room</td>
+                <td th:text="${booking.bookingDate}">Booking Date</td>
+                <td>
+                    <form th:action="@{/admin/approveBooking}" method="post" style="display:inline-block;">
+                        <input type="hidden" name="bookingId" th:value="${booking.id}" />
+                        <button type="submit" class="button">Accept</button>
+                    </form>
+                    <form th:action="@{/admin/rejectBooking}" method="post" style="display:inline-block;">
+                        <input type="hidden" name="bookingId" th:value="${booking.id}" />
+                        <button type="submit" class="button button-danger">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(pendingBookings)}">
+                <td colspan="5" style="text-align:center;">Tidak ada booking pending.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
