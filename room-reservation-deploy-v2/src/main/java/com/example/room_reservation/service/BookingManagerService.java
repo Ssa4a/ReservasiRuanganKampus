@@ -67,4 +67,5 @@ public class BookingManagerService {
     public List<Room> getRoomsByType(String type) {
         return roomRepository.findByType(type.toUpperCase());  // Menggunakan RoomRepository untuk mencari ruangan berdasarkan tipe
 }
+
 }

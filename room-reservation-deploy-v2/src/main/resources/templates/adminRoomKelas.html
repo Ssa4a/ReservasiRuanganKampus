@@ -40,28 +40,6 @@
     td {
       color: #555;
     }
-
-    .status-booked {
-      background-color: #ff4d4d;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-    }
-
-    .status-available {
-      background-color: #28a745;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-    }
-
-    select {
-      padding: 5px 10px;
-      font-size: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -81,34 +59,12 @@
       <tr>
         <td th:text="${iterStat.index + 1}"></td>
         <td th:text="${room.name}">Nama Ruangan</td>
-        <td>
-          <select th:value="${room.status}" th:attr="onchange='updateRoomStatus(${room.id}, this.value)'">
-            <option value="BOOKED" th:selected="${room.status == 'BOOKED'}">BOOKED</option>
-            <option value="AVAILABLE" th:selected="${room.status == 'AVAILABLE'}">AVAILABLE</option>
-          </select>
-        </td>
+        <td th:text="${room.status}">Status</td>
       </tr>
     </th:block>
     </tbody>
   </table>
 </div>
-
-<script>
-  function updateRoomStatus(roomId, status) {
-    fetch('/admin/room/update-status/${roomId}?status=${status}', {
-      method: 'GET'
-    })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                alert('Status ruangan berhasil diperbarui!');
-              } else {
-                alert('Gagal memperbarui status ruangan.');
-              }
-            })
-            .catch(error => console.error('Error:', error));
-  }
-</script>
 
 </body>
 </html>

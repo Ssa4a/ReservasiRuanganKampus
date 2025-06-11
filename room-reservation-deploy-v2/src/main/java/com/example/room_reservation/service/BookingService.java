@@ -28,6 +28,7 @@ public class BookingService {
             .orElseThrow(() -> new RuntimeException("Booking not found"));
         booking.setStatus(BookingStatus.REJECTED);
         bookingRepository.save(booking);
+        System.out.println("Status booking sudah diupdate ke REJECTED");
     }
 
     // Ambil list booking berdasarkan status

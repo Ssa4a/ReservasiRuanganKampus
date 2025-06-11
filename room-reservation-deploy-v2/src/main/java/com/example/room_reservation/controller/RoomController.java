@@ -1,6 +1,5 @@
 package com.example.room_reservation.controller;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,7 @@ import com.example.room_reservation.model.RoomStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;  // Import service yang benar
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -25,11 +24,11 @@ public class RoomController {
     private static final Logger logger = LoggerFactory.getLogger(RoomController.class);
 
     @Autowired
-    private BookingManagerService bookingManagerService;  // Ubah menjadi service, bukan entitas
+    private BookingManagerService bookingManagerService;
 
     @GetMapping("/viewRoom")
     public String lihatRuangan() {
-        return "viewRoom";  // Mengarah ke file viewRoom.html di folder templates
+        return "viewRoom";
     }
 
     @GetMapping("/reserve/room")
@@ -40,23 +39,29 @@ public class RoomController {
     // Endpoint untuk menampilkan ruangan berdasarkan tipe yang dipilih oleh client
     @GetMapping("/client/room/{type}")
     public String viewClientRoom(@PathVariable String type, Model model) {
-        // Menyesuaikan tipe ruangan dengan huruf besar
-        type = type.toUpperCase();  // Mengubah tipe ruangan yang diminta menjadi huruf besar
+        type = type.toUpperCase();  // Pastikan tipe yang diterima adalah dalam bentuk huruf besar
 
-        // Mengambil ruangan berdasarkan tipe
+        // Ambil semua ruangan berdasarkan tipe dan pastikan hanya ruangan yang tersedia (AVAILABLE) yang diambil
         List<Room> rooms = bookingManagerService.getRoomsByType(type);
-        model.addAttribute("rooms", rooms);  // Menambahkan daftar ruangan ke model
 
-        // Mengarahkan ke tampilan yang sesuai berdasarkan tipe ruangan
+        // Jika tidak ada ruangan ditemukan untuk tipe tersebut
+        if (rooms.isEmpty()) {
+            model.addAttribute("error", "Tidak ada ruangan yang tersedia untuk tipe: " + type);
+            return "error";  // Tampilkan halaman error jika tidak ada ruangan
+        }
+
+        model.addAttribute("rooms", rooms);  // Pass ruangan ke model untuk ditampilkan di halaman
+
         switch (type) {
             case "LAB":
-                return "clientRoomLab";  // Menampilkan clientRoomLab.html
+                return "clientRoomLab";  // Arahkan ke tampilan ruangan Lab
             case "KELAS":
-                return "clientRoomKelas";  // Menampilkan clientRoomKelas.html
+                return "clientRoomKelas";  // Arahkan ke tampilan ruangan Kelas
             case "AULA":
-                return "clientRoomAula";  // Menampilkan clientRoomAula.html
+                return "clientRoomAula";  // Arahkan ke tampilan ruangan Aula
             default:
-                return "clientdashboard";  // Halaman default jika tipe tidak dikenali
+                model.addAttribute("error", "Tipe ruangan tidak dikenali: " + type);
+                return "error";  // Tampilkan error jika tipe ruangan tidak dikenali
         }
     }
 
@@ -64,51 +69,42 @@ public class RoomController {
     @GetMapping("/admin/rooms/{type}")
     public String showAdminRooms(@PathVariable String type, Model model) {
         try {
-            // Convert the type to upper case to match the expected format
             type = type.toUpperCase();
-
-            // Retrieve rooms based on the type
             List<Room> rooms = bookingManagerService.getRoomsByType(type);
-            model.addAttribute("rooms", rooms);  // Add rooms to the model
+            model.addAttribute("rooms", rooms);
 
-            // Use switch case to handle different room types for admin
             switch (type) {
                 case "KELAS":
-                    return "adminRoomKelas";  // Template for classroom rooms
+                    return "adminRoomKelas";
                 case "LAB":
-                    return "adminRoomLab";  // Template for lab rooms
+                    return "adminRoomLab";
                 case "AULA":
-                    return "adminRoomAula";  // Template for aula rooms
+                    return "adminRoomAula";
                 default:
                     model.addAttribute("error", "Unknown room type: " + type);
-                    return "error";  // If the type is not recognized, show an error page
+                    return "error";
             }
         } catch (Exception e) {
             model.addAttribute("error", "Error fetching rooms for type " + type + ": " + e.getMessage());
-            return "error";  // Display error page if something goes wrong
+            return "error";
         }
     }
 
-    // Endpoint untuk memperbarui status ruangan
     // Endpoint untuk memperbarui status ruangan
     @GetMapping("/admin/room/update-status/{id}")
     @ResponseBody
     public Map<String, Object> updateRoomStatus(@PathVariable Long id, @RequestParam String status) {
         Map<String, Object> response = new HashMap<>();
-
-        // Ambil ruangan berdasarkan ID
         Room room = bookingManagerService.getRoomById(id);
         logger.info("Room ID: " + id + ", Status before update: " + room.getStatus());
 
         if (room != null) {
-            // Mengubah status ruangan
             if ("BOOKED".equals(status)) {
-                room.setStatus(RoomStatus.BOOKED);  // Set status ke BOOKED
+                room.setStatus(RoomStatus.BOOKED);
             } else {
-                room.setStatus(RoomStatus.AVAILABLE);  // Set status ke AVAILABLE
+                room.setStatus(RoomStatus.AVAILABLE);
             }
 
-            // Simpan perubahan status ke database
             bookingManagerService.saveRoom(room);
             logger.info("Room ID: " + room.getId() + " updated to status: " + room.getStatus());
 
@@ -120,5 +116,21 @@ public class RoomController {
         }
 
         return response;
-}
+    }
+
+    // Endpoint untuk menampilkan semua ruangan
+    @GetMapping("/rooms")
+    public String showRooms(Model model) {
+        try {
+            // Ambil semua ruangan
+            List<Room> rooms = bookingManagerService.getAllRooms();
+            model.addAttribute("rooms", rooms);
+
+            // Mengarahkan ke view 'adminRoomKelas' untuk menampilkan data
+            return "adminRoomKelas";  // nama file HTML-nya (adminRoomKelas.html)
+        } catch (Exception e) {
+            model.addAttribute("error", "Gagal mengambil daftar ruangan: " + e.getMessage());
+            return "error";  // Halaman error jika ada masalah
+        }
+    }
 }

@@ -76,9 +76,11 @@
 
         <label for="roomId">Pilih Ruangan</label>
         <select id="roomId" name="roomId" required>
-            <option value="1">Ruang A</option>
-            <option value="2">Ruang B</option>
-            <!-- Sesuaikan dengan data real -->
+            <option value="">-- Pilih Ruangan --</option>
+            <option th:each="room : ${rooms}"
+                    th:value="${room.id}"
+                    th:text="${room.name + ' (' + room.type + ')'}">
+            </option>
         </select>
 
         <label for="purpose">Keperluan</label>
