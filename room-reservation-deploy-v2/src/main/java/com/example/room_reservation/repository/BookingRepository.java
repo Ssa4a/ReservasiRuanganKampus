@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
@@ -20,5 +21,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     // Pencarian berdasarkan roomId dan status (menggunakan room.id)
     List<Booking> findByRoom_IdAndStatus(Long roomId, BookingStatus status);  // Menggunakan room.id untuk pencarian
-}
 
+    // Tambahin method ini untuk ambil booking by ID
+    Optional<Booking> findById(Long id);
+}

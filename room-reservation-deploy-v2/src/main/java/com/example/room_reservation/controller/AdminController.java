@@ -2,6 +2,10 @@ package com.example.room_reservation.controller;
 
 import com.example.room_reservation.model.Booking;
 import com.example.room_reservation.model.BookingStatus;
+import com.example.room_reservation.model.Room;
+import com.example.room_reservation.model.RoomStatus;
+import com.example.room_reservation.repository.BookingRepository;
+import com.example.room_reservation.repository.RoomRepository;
 import com.example.room_reservation.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,11 @@ public class AdminController {
 
     @Autowired
     private BookingService bookingService;
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
 
     @GetMapping("/admin/dashboard")
     public String showAdminDashboard(Model model) {
@@ -32,12 +41,15 @@ public class AdminController {
     @PostMapping("/admin/approveBooking")
     public String approveBooking(@RequestParam("bookingId") Long bookingId) {
         bookingService.acceptBooking(bookingId);
-        return "redirect:/admin/dashboard";
-    }
 
-    @PostMapping("/admin/rejectBooking")
-    public String rejectBooking(@RequestParam("bookingId") Long bookingId) {
-        bookingService.rejectBooking(bookingId);
+        // Kode ini sekarang harusnya work
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        if (booking != null) {
+            Room room = booking.getRoom();
+            room.setStatus(RoomStatus.valueOf("BOOKED"));
+            roomRepository.save(room);
+        }
+
         return "redirect:/admin/dashboard";
     }
 }
