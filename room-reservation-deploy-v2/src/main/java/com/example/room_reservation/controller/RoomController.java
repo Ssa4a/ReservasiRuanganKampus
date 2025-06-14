@@ -3,8 +3,10 @@ package com.example.room_reservation.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.example.room_reservation.model.RoomStatus;
+import com.example.room_reservation.repository.RoomRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class RoomController {
 
     @Autowired
     private BookingManagerService bookingManagerService;
+    @Autowired
+    private RoomRepository roomRepository;
 
     @GetMapping("/viewRoom")
     public String lihatRuangan() {
@@ -32,10 +36,32 @@ public class RoomController {
     }
 
     @GetMapping("/reserve/room")
-    public String showReserveRoomPage() {
+    public String showReserveRoomPage(Model model) {
+        // Ambil semua ruangan dulu
+        List<Room> allRooms = bookingManagerService.getAllRooms();
+
+        // Debug: print semua ruangan dan statusnya
+        System.out.println("=== DEBUG: Semua ruangan ===");
+        for (Room room : allRooms) {
+            System.out.println("Room: " + room.getName() + " - Status: " + room.getStatus());
+        }
+
+        // Filter hanya yang AVAILABLE
+        List<Room> availableRooms = allRooms.stream()
+                .filter(room -> room.getStatus() == RoomStatus.AVAILABLE)
+                .collect(Collectors.toList());
+
+        // Debug: print ruangan yang available
+        System.out.println("=== DEBUG: Ruangan Available ===");
+        for (Room room : availableRooms) {
+            System.out.println("Available Room: " + room.getName() + " - Status: " + room.getStatus());
+        }
+
+        // Kirim data ke template
+        model.addAttribute("rooms", availableRooms);
+
         return "reserveRoom";
     }
-
     // Endpoint untuk menampilkan ruangan berdasarkan tipe yang dipilih oleh client
     @GetMapping("/client/room/{type}")
     public String viewClientRoom(@PathVariable String type, Model model) {

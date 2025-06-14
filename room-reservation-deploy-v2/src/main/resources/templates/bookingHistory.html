@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Pemesanan</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f7;
+            margin: 0;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px; /* Lebih lebar dari sebelumnya */
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f9fbfc;
+        }
+
+        .no-data {
+            text-align: center;
+            font-style: italic;
+            color: #999;
+            padding: 20px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 16px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Riwayat Pemesanan</h1>
+
+    <p>Total booking: <strong th:text="${#lists.size(bookings)}">0</strong></p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID Booking</th>
+            <th>Nama Ruangan</th>
+            <th>Tanggal Booking</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="booking : ${bookings}" th:if="${bookings != null and not #lists.isEmpty(bookings)}">
+            <td th:text="${booking.id}">1</td>
+            <td th:text="${booking.room != null ? booking.room.name : 'N/A'}">Nama Ruangan</td>
+            <td th:text="${#temporals.format(booking.bookingDate, 'dd-MM-yyyy')}">Tanggal</td>
+            <td th:text="${booking.status}">Status</td>
+        </tr>
+        <tr th:if="${bookings == null or #lists.isEmpty(bookings)}">
+            <td class="no-data" colspan="4">Tidak ada riwayat pemesanan.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/client/dashboard">⬅ Kembali ke Dashboard</a>
+</div>
+
+</body>
+</html>

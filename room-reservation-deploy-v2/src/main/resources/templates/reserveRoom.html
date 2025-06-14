@@ -62,6 +62,37 @@
         button:hover {
             background-color: #0056b3;
         }
+
+        /* Alert Styles */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .alert-close {
+            float: right;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1;
+            color: #000;
+            opacity: 0.5;
+            cursor: pointer;
+        }
+        .alert-close:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +101,19 @@
 </div>
 <div class="container">
     <h2>Formulir Reservasi Ruangan</h2>
+
+    <!-- Alert Message -->
+    <div th:if="${alertMessage}" th:class="'alert alert-' + ${alertType}">
+        <span class="alert-close" onclick="this.parentElement.style.display='none'">&times;</span>
+        <span th:text="${alertMessage}"></span>
+    </div>
+
+    <!-- Error Message (backward compatibility) -->
+    <div th:if="${error}" class="alert alert-error">
+        <span class="alert-close" onclick="this.parentElement.style.display='none'">&times;</span>
+        <span th:text="${error}"></span>
+    </div>
+
     <form th:action="@{/submit-reservation}" method="post">
         <label for="date">Tanggal</label>
         <input type="date" id="date" name="date" required>
@@ -96,5 +140,15 @@
     </form>
 
 </div>
+
+<script>
+    // Auto-hide alert after 5 seconds
+    setTimeout(function() {
+        var alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            alert.style.display = 'none';
+        });
+    }, 5000);
+</script>
 </body>
 </html>

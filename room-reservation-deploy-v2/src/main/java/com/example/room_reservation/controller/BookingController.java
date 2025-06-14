@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class BookingController {
@@ -27,8 +28,11 @@ public class BookingController {
     // GET method untuk menampilkan form reservasi (route lama)
     @GetMapping("/submit-reservation")
     public String showReservationForm(Model model) {
-        // Ambil semua ruangan dari database untuk ditampilkan di dropdown
-        List<Room> rooms = roomRepository.findAll();
+        // Ambil hanya ruangan yang AVAILABLE untuk ditampilkan di dropdown
+        List<Room> allRooms = roomRepository.findAll();
+        List<Room> rooms = allRooms.stream()
+                .filter(room -> room.getStatus() == RoomStatus.AVAILABLE)
+                .collect(Collectors.toList());
         model.addAttribute("rooms", rooms);
         return "submit-reservation";
     }
@@ -38,30 +42,71 @@ public class BookingController {
     public String showReserveRoomForm(Model model) {
         try {
             // Ambil semua ruangan dari database
-            List<Room> rooms = roomRepository.findAll();
+            List<Room> allRooms = roomRepository.findAll();
 
-            // Debug log untuk melihat data rooms
-            System.out.println("=== LOADING ROOMS FOR /reserve-room ===");
-            System.out.println("Total rooms found: " + rooms.size());
+            // Debug log untuk melihat SEMUA ruangan di database
+            System.out.println("=== LOADING ALL ROOMS FROM DATABASE ===");
+            System.out.println("Total rooms found in database: " + allRooms.size());
 
-            if (rooms.isEmpty()) {
-                System.out.println("WARNING: No rooms found in database!");
+            if (allRooms.isEmpty()) {
+                System.out.println("WARNING: No rooms found in database at all!");
             } else {
-                for (Room room : rooms) {
+                System.out.println("=== ALL ROOMS IN DATABASE ===");
+                for (Room room : allRooms) {
                     System.out.println("Room ID: " + room.getId() +
                             " - Name: " + room.getName() +
                             " - Type: " + room.getType() +
                             " - Status: " + room.getStatus());
                 }
+                System.out.println("=== END ALL ROOMS ===");
             }
 
-            model.addAttribute("rooms", rooms);
-            System.out.println("Rooms attribute added to model successfully");
-            System.out.println("=== END LOADING ROOMS ===");
+            // Filter hanya ruangan yang AVAILABLE
+            List<Room> availableRooms = allRooms.stream()
+                    .filter(room -> room.getStatus() == RoomStatus.AVAILABLE)
+                    .collect(Collectors.toList());
+
+            // Debug log untuk melihat ruangan AVAILABLE
+            System.out.println("=== FILTERING AVAILABLE ROOMS ===");
+            System.out.println("Available rooms found: " + availableRooms.size());
+
+            if (availableRooms.isEmpty()) {
+                System.out.println("WARNING: No available rooms found after filtering!");
+                model.addAttribute("noRoomsMessage", "Saat ini tidak ada ruangan yang tersedia untuk reservasi.");
+            } else {
+                System.out.println("=== AVAILABLE ROOMS AFTER FILTERING ===");
+                for (Room room : availableRooms) {
+                    System.out.println("Available Room ID: " + room.getId() +
+                            " - Name: " + room.getName() +
+                            " - Type: " + room.getType() +
+                            " - Status: " + room.getStatus());
+                }
+                System.out.println("=== END AVAILABLE ROOMS ===");
+            }
+
+            // Debug: Cek berdasarkan tipe ruangan
+            System.out.println("=== BREAKDOWN BY ROOM TYPE ===");
+            long kelasCount = allRooms.stream().filter(r -> "KELAS".equals(r.getType())).count();
+            long aulaCount = allRooms.stream().filter(r -> "AULA".equals(r.getType())).count();
+            long labCount = allRooms.stream().filter(r -> "LAB".equals(r.getType())).count();
+
+            long kelasAvailable = allRooms.stream().filter(r -> "KELAS".equals(r.getType()) && r.getStatus() == RoomStatus.AVAILABLE).count();
+            long aulaAvailable = allRooms.stream().filter(r -> "AULA".equals(r.getType()) && r.getStatus() == RoomStatus.AVAILABLE).count();
+            long labAvailable = allRooms.stream().filter(r -> "LAB".equals(r.getType()) && r.getStatus() == RoomStatus.AVAILABLE).count();
+
+            System.out.println("KELAS - Total: " + kelasCount + ", Available: " + kelasAvailable);
+            System.out.println("AULA - Total: " + aulaCount + ", Available: " + aulaAvailable);
+            System.out.println("LAB - Total: " + labCount + ", Available: " + labAvailable);
+            System.out.println("=== END BREAKDOWN ===");
+
+            model.addAttribute("rooms", availableRooms);
+            System.out.println("Available rooms attribute added to model successfully");
+            System.out.println("=== END LOADING AVAILABLE ROOMS ===");
 
         } catch (Exception e) {
-            System.out.println("ERROR loading rooms: " + e.getMessage());
+            System.out.println("ERROR loading available rooms: " + e.getMessage());
             e.printStackTrace();
+            model.addAttribute("error", "Terjadi kesalahan saat memuat data ruangan: " + e.getMessage());
         }
 
         return "reserveRoom"; // nama file HTML tanpa .html
@@ -80,12 +125,45 @@ public class BookingController {
             if (rooms.isEmpty()) {
                 result.append("<b>No rooms found in database!</b>");
             } else {
+                result.append("<h3>All Rooms:</h3>");
                 for (Room room : rooms) {
                     result.append("ID: ").append(room.getId())
                             .append(" - Name: ").append(room.getName())
                             .append(" - Type: ").append(room.getType())
                             .append(" - Status: ").append(room.getStatus())
                             .append("<br>");
+                }
+
+                // Breakdown berdasarkan tipe
+                result.append("<br><h3>Breakdown by Type:</h3>");
+                long kelasTotal = rooms.stream().filter(r -> "KELAS".equals(r.getType())).count();
+                long aulaTotal = rooms.stream().filter(r -> "AULA".equals(r.getType())).count();
+                long labTotal = rooms.stream().filter(r -> "LAB".equals(r.getType())).count();
+
+                long kelasAvailable = rooms.stream().filter(r -> "KELAS".equals(r.getType()) && r.getStatus() == RoomStatus.AVAILABLE).count();
+                long aulaAvailable = rooms.stream().filter(r -> "AULA".equals(r.getType()) && r.getStatus() == RoomStatus.AVAILABLE).count();
+                long labAvailable = rooms.stream().filter(r -> "LAB".equals(r.getType()) && r.getStatus() == RoomStatus.AVAILABLE).count();
+
+                result.append("<b>KELAS:</b> Total = ").append(kelasTotal).append(", Available = ").append(kelasAvailable).append("<br>");
+                result.append("<b>AULA:</b> Total = ").append(aulaTotal).append(", Available = ").append(aulaAvailable).append("<br>");
+                result.append("<b>LAB:</b> Total = ").append(labTotal).append(", Available = ").append(labAvailable).append("<br>");
+
+                // Tampilkan ruangan yang tidak available
+                result.append("<br><h3>Non-Available Rooms:</h3>");
+                List<Room> nonAvailable = rooms.stream()
+                        .filter(r -> r.getStatus() != RoomStatus.AVAILABLE)
+                        .collect(Collectors.toList());
+
+                if (nonAvailable.isEmpty()) {
+                    result.append("All rooms are AVAILABLE<br>");
+                } else {
+                    for (Room room : nonAvailable) {
+                        result.append("ID: ").append(room.getId())
+                                .append(" - Name: ").append(room.getName())
+                                .append(" - Type: ").append(room.getType())
+                                .append(" - Status: ").append(room.getStatus())
+                                .append("<br>");
+                    }
                 }
             }
             return result.toString();
@@ -130,6 +208,19 @@ public class BookingController {
                 model.addAttribute("error", "Ruangan tidak ditemukan.");
                 // Kembalikan ke form dengan data rooms
                 List<Room> rooms = roomRepository.findAll();
+                model.addAttribute("rooms", rooms);
+                return "reserveRoom";
+            }
+
+            // CEK STATUS RUANGAN - JIKA BOOKED, KEMBALIKAN ERROR (DOUBLE CHECK)
+            if (room.getStatus() == RoomStatus.BOOKED) {
+                System.out.println("ERROR: Room " + room.getName() + " sudah di-booking");
+                model.addAttribute("error", "Ruangan " + room.getName() + " sudah tidak tersedia.");
+                // Kembalikan ke form dengan data rooms AVAILABLE saja
+                List<Room> allRooms = roomRepository.findAll();
+                List<Room> rooms = allRooms.stream()
+                        .filter(r -> r.getStatus() == RoomStatus.AVAILABLE)
+                        .collect(Collectors.toList());
                 model.addAttribute("rooms", rooms);
                 return "reserveRoom";
             }
